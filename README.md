@@ -371,7 +371,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Asish Adimulapu**
 - GitHub: [@asishadimulapu](https://github.com/asishadimulapu)
 - LinkedIn: [Asish Adimulapu](https://linkedin.com/in/asishadimulapu)
-- Email: asish.adimulapu@example.com
+- Email: asishdandy87@gmail.com
 
 ## 🙏 Acknowledgments
 

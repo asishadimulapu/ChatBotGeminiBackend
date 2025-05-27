@@ -3,7 +3,6 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v16%2B-green.svg)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-4.x-blue.svg)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-5.x-green.svg)](https://www.mongodb.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A production-ready Node.js backend service that powers intelligent conversational AI applications using Google's Gemini Generative AI API. Built with Express.js and MongoDB, it provides secure authentication, real-time chat capabilities, and persistent conversation management.
 

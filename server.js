@@ -36,7 +36,11 @@ app.use(helmet({
 // CORS configuration - restrict in production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://chat-bot-gemini-frontend.vercel.app', process.env.CORS_ORIGIN] 
+    ? [
+        'https://chat-bot-gemini-frontend.vercel.app', 
+        'https://chat-bot-gemini-frontend-662zruhd3-asishadimulapus-projects.vercel.app',
+        process.env.CORS_ORIGIN
+      ] 
     : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
   optionsSuccessStatus: 200

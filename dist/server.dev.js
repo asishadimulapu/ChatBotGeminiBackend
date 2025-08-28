@@ -44,7 +44,7 @@ app.use(helmet({
 })); // CORS configuration - restrict in production
 
 var corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? ['https://your-frontend-domain.com'] // Replace with your actual frontend domain
+  origin: process.env.NODE_ENV === 'production' ? ['https://chat-bot-gemini-frontend.vercel.app/login'] // Replace with your actual frontend domain
   : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
   optionsSuccessStatus: 200

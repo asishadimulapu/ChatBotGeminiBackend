@@ -1,5 +1,7 @@
 const express = require('express');
 const auth = require('../middlewares/authMiddleware');
+const { validateChatPrompt } = require('../middlewares/validation');
+const { chatLimiter } = require('../middlewares/rateLimiter');
 const {
   createChat,
   getChats,
@@ -8,8 +10,14 @@ const {
 
 const router = express.Router();
 
-router.post('/', auth, createChat);
-router.get('/', auth, getChats);
-router.delete('/:id', auth, deleteChat);
+// Apply auth middleware to all routes
+router.use(auth);
+
+// Apply chat rate limiting to all routes
+router.use(chatLimiter);
+
+router.post('/', validateChatPrompt, createChat);
+router.get('/', getChats);
+router.delete('/:id', deleteChat);
 
 module.exports = router;

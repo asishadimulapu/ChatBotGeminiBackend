@@ -6,8 +6,17 @@ var _require = require('../controllers/authController'),
     register = _require.register,
     login = _require.login;
 
-var router = express.Router();
-router.post('/register', register);
-router.post('/login', login);
+var _require2 = require('../middlewares/validation'),
+    validateRegistration = _require2.validateRegistration,
+    validateLogin = _require2.validateLogin;
+
+var _require3 = require('../middlewares/rateLimiter'),
+    authLimiter = _require3.authLimiter;
+
+var router = express.Router(); // Apply auth rate limiting to all routes
+
+router.use(authLimiter);
+router.post('/register', validateRegistration, register);
+router.post('/login', validateLogin, login);
 module.exports = router;
 //# sourceMappingURL=authRoutes.dev.js.map

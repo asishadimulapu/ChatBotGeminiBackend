@@ -2,33 +2,72 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ msg: 'User already exists' });
+    
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ msg: 'User already exists with this email' });
+    }
 
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed });
+    // Hash password with higher salt rounds for better security
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    
+    // Create user
+    const user = await User.create({ 
+      name: name.trim(), 
+      email: email.toLowerCase().trim(), 
+      password: hashedPassword 
+    });
 
-    res.status(201).json({ msg: 'User registered successfully' });
+    res.status(201).json({ 
+      msg: 'User registered successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    next(err); // Pass error to error handling middleware
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+    
+    // Find user and include password for comparison
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(400).json({ msg: 'Invalid email or password' });
+    }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(400).json({ msg: 'Invalid credentials' });
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ msg: 'Invalid email or password' });
+    }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-    res.json({ token, user: { id: user._id, name: user.name } });
+    // Generate JWT token with expiration
+    const token = jwt.sign(
+      { userId: user._id }, 
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' } // Token expires in 24 hours
+    );
+
+    res.json({ 
+      token, 
+      user: { 
+        id: user._id, 
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    next(err); // Pass error to error handling middleware
   }
 };

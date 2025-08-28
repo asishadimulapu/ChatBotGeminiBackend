@@ -54,6 +54,19 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/chats', chatRoutes);
 
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'ChatBot API Server is running! 🤖',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      chats: '/api/chats',
+      health: '/health'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ 

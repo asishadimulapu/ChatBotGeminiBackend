@@ -44,8 +44,7 @@ app.use(helmet({
 })); // CORS configuration - restrict in production
 
 var corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? ['https://chat-bot-gemini-frontend.vercel.app/login'] // Replace with your actual frontend domain
-  : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: process.env.NODE_ENV === 'production' ? ['https://chat-bot-gemini-frontend.vercel.app', 'https://chat-bot-gemini-frontend-662zruhd3-asishadimulapus-projects.vercel.app', process.env.CORS_ORIGIN] : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -62,7 +61,19 @@ app.use(express.urlencoded({
 })); // API routes
 
 app.use('/api/auth', authRoutes);
-app.use('/api/chats', chatRoutes); // Health check endpoint
+app.use('/api/chats', chatRoutes); // Root route
+
+app.get('/', function (req, res) {
+  res.status(200).json({
+    message: 'ChatBot API Server is running! 🤖',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      chats: '/api/chats',
+      health: '/health'
+    }
+  });
+}); // Health check endpoint
 
 app.get('/health', function (req, res) {
   res.status(200).json({
